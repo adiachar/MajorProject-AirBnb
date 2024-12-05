@@ -2,6 +2,7 @@ const Listing = require("./models/listing.js");
 const Review = require("./models/review.js");
 const {listingSchema, reviewSchema} = require("./schema.js");
 const ExpressError = require("./utils/ExpressError.js");
+
 module.exports.isLoggedIn = (req, res, next) => {
     if(!req.isAuthenticated()){
         req.session.redirectUrl = req.originalUrl;
@@ -22,7 +23,6 @@ module.exports.isOwner  = async (req, res, next) => {
     let {id} = req.params;
     let listing = await Listing.findById(id);
     if(res.locals.currUser && !listing.owner._id.equals(res.locals.currUser._id)){
-        console.log(res.locals.currUser);
         req.flash("failure", "You are not the owner");
         res.redirect(`/listings/${id}`);
     }else{
